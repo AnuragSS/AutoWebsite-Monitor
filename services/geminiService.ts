@@ -79,20 +79,28 @@ export const analyzeWithGemini = async (
   consoleLogs: string
 ): Promise<AIAnalysis> => {
   
-  // Safe access to API Key
+  // Safe access to API Key (Supports both Vite local and standard process.env)
   let apiKey = '';
   try {
-    // @ts-ignore - Guard against environments where process is undefined
-    if (typeof process !== 'undefined' && process.env) {
+    // Check Vite (Local Development)
+    // @ts-ignore
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      // @ts-ignore
+      apiKey = import.meta.env.VITE_API_KEY || '';
+    }
+    
+    // Check standard Node/Process (Fallback)
+    // @ts-ignore 
+    if (!apiKey && typeof process !== 'undefined' && process.env) {
       apiKey = process.env.API_KEY || '';
     }
   } catch (e) {
-    console.warn("Could not access process.env");
+    console.warn("Could not access environment variables");
   }
 
   // Use simulation if no key is present
   if (!apiKey) {
-    console.warn("No API_KEY found, using simulation.");
+    console.warn("No API_KEY found (checked VITE_API_KEY and API_KEY), using simulation.");
     return simulateAnalysis(metrics, consoleLogs);
   }
 
