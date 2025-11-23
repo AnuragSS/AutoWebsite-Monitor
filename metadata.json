@@ -1,0 +1,5 @@
+{
+  "name": "AutoWebsite Monitor",
+  "description": "AI-powered website status checker and error detector providing health scores, SEO insights, and accessibility analysis.",
+  "requestFramePermissions": []
+}
